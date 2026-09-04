@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Syntax Palette</title>
+<meta name="description" content="Syntax Palette is a Google Slides and Google Docs add-on that applies syntax highlighting to source code and pseudocode inside the file you have open. Supports C, C++, Python, JavaScript and pseudocode. Free.">
+<meta property="og:title" content="Syntax Palette">
+<meta property="og:description" content="Applies syntax highlighting to source code and pseudocode inside Google Slides and Google Docs.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dinosinfolee.github.io/policy/syntax-palette/">
+<link rel="canonical" href="https://dinosinfolee.github.io/policy/syntax-palette/">
+<link rel="icon" href="icon.svg">
+<style>
+  :root{
+    --bg:#141414; --surface:#1c1c1c; --surface-2:#232323;
+    --line:#2e2e2e; --text:#e8e8e8; --muted:#9a9a9a; --faint:#6e6e6e;
+    --ctl:#c586c0; --kw:#569cd6; --str:#ce9178; --fn:#dcdcaa; --cmt:#6a9955; --num:#b5cea8; --type:#4ec9b0;
+    --accent:#569cd6;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:ui-sans-serif,-apple-system,'Segoe UI','Pretendard','Apple SD Gothic Neo','Noto Sans KR',Roboto,sans-serif;
+    font-size:16px; line-height:1.7; -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:860px; margin:0 auto; padding:0 24px}
+  code,.mono{font-family:ui-monospace,'SF Mono','Roboto Mono',Consolas,monospace}
+
+  /* ── header ── */
+  header{border-bottom:1px solid var(--line); position:sticky; top:0; background:rgba(20,20,20,.86); backdrop-filter:blur(8px); z-index:10}
+  .nav{display:flex; align-items:center; gap:12px; height:62px}
+  .nav .name{font-weight:650; letter-spacing:-.01em}
+  .nav nav{margin-left:auto; display:flex; gap:20px; font-size:14.5px; align-items:center}
+  .nav nav a{color:var(--muted)}
+  .nav nav a:hover{color:var(--text); text-decoration:none}
+  .logo{width:30px;height:30px;flex:none;display:block}
+
+  /* ── language switch ── */
+  .lang{display:inline-flex; border:1px solid var(--line); border-radius:7px; overflow:hidden; background:var(--surface); flex:none}
+  .lang button{
+    appearance:none; border:0; background:transparent; color:var(--muted);
+    font:inherit; font-size:12.5px; line-height:1; padding:6px 10px; cursor:pointer;
+    font-family:inherit;
+  }
+  .lang button + button{border-left:1px solid var(--line)}
+  .lang button:hover{color:var(--text)}
+  .lang button[aria-pressed="true"]{background:var(--surface-2); color:var(--text); font-weight:600}
+
+  /* ── hero ── */
+  .hero{padding:76px 0 60px; border-bottom:1px solid var(--line)}
+  .hero h1{font-size:40px; line-height:1.2; margin:0 0 14px; letter-spacing:-.025em; font-weight:700}
+  .hero p.tagline{font-size:18px; color:var(--text); margin:0 0 18px; font-weight:500; line-height:1.5; max-width:680px}
+  .hero p.lead{font-size:16.5px; color:var(--muted); margin:0 0 26px; max-width:680px}
+  .badges{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:28px}
+  .badge{font-size:13px; color:var(--muted); border:1px solid var(--line); background:var(--surface); border-radius:999px; padding:4px 12px}
+  .cta{display:inline-flex; align-items:center; gap:8px; background:var(--accent); color:#0d1117; font-weight:600;
+       padding:11px 20px; border-radius:8px; font-size:15px}
+  .cta:hover{background:#6cb0e8; text-decoration:none}
+  .cta-note{font-size:13.5px; color:var(--faint); margin-top:12px}
+
+  /* ── sections ── */
+  section{padding:58px 0; border-bottom:1px solid var(--line)}
+  h2{font-size:23px; margin:0 0 8px; letter-spacing:-.015em; font-weight:650}
+  .sub{color:var(--muted); margin:0 0 28px; font-size:15.5px}
+  h3{font-size:16.5px; margin:0 0 6px; font-weight:600}
+
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  @media(max-width:680px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:20px 18px}
+  .card p{margin:0; color:var(--muted); font-size:14.5px; line-height:1.65}
+
+  /* ── code samples ── */
+  .demo{background:var(--surface); border:1px solid var(--line); border-radius:10px; overflow:hidden}
+  .demo-head{display:flex; align-items:center; gap:8px; padding:9px 14px; border-bottom:1px solid var(--line); background:var(--surface-2)}
+  .dot{width:9px;height:9px;border-radius:50%}
+  .demo-title{font-size:12.5px; color:var(--faint); margin-left:6px}
+  .demo pre{margin:0; padding:18px; overflow-x:auto; font-size:13.5px; line-height:1.75}
+  .demo pre.pseudo{font-family:'Courier New',ui-monospace,'Roboto Mono',monospace; font-size:14px}
+  .demo pre.pseudo .b{font-weight:700}
+  .i{font-style:italic}
+  .k{color:var(--kw)} .c{color:var(--ctl)} .s{color:var(--str)} .f{color:var(--fn)}
+  .m{color:var(--cmt)} .n{color:var(--num)} .t{color:var(--type)}
+
+  table{width:100%; border-collapse:collapse; font-size:14.5px; margin-top:4px}
+  th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line)}
+  th{color:var(--faint); font-weight:500; font-size:13px}
+  td:first-child{width:38%; color:var(--muted)}
+
+  /* ── developer ── */
+  .dev{display:flex; gap:18px; align-items:flex-start; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:22px 20px}
+  .dev .mark{width:52px;height:52px;flex:none;display:block;border-radius:50%}
+  .dev dl{margin:14px 0 0; display:grid; grid-template-columns:auto 1fr; gap:6px 18px; font-size:14.5px}
+  .dev dt{color:var(--faint)}
+  .dev dd{margin:0}
+
+  footer{padding:38px 0 56px; color:var(--faint); font-size:13.5px}
+  footer .links{display:flex; gap:18px; flex-wrap:wrap; margin-bottom:18px; font-size:14.5px}
+  footer p{margin:5px 0; line-height:1.6}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Syntax Palette",
+  "applicationCategory": "BrowserApplication",
+  "operatingSystem": "Web",
+  "url": "https://dinosinfolee.github.io/policy/syntax-palette/",
+  "description": "Syntax Palette is a Google Slides and Google Docs add-on that applies syntax highlighting to source code and pseudocode inside the file you have open.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Sani", "email": "dinosinfolee@gmail.com" }
+}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <img class="logo" src="icon.svg" alt="Syntax Palette logo">
+    <span class="name">Syntax Palette</span>
+    <nav>
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="#pseudo" data-i18n="nav.pseudo">Pseudocode</a>
+      <a href="#developer" data-i18n="nav.developer">Developer</a>
+      <a href="privacy" data-i18n="nav.privacy">Privacy</a>
+      <span class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="ko" aria-pressed="false">한국어</button>
+      </span>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <h1>Syntax Palette</h1>
+    <p class="tagline" data-i18n="hero.tagline">
+      Syntax Palette is a Google Slides™ and Google Docs™ add-on that applies syntax
+      highlighting to source code and pseudocode inside the file you have open.
+    </p>
+    <p class="lead" data-i18n="hero.lead">
+      What this add-on does: you can select code in a Google Slides™ presentation or a Google Docs™
+      document and apply colour to its keywords, strings and comments. It supports C, C++, Python,
+      JavaScript and pseudocode; in pseudocode, variables become italic and keywords become upright
+      and bold. It is free.
+    </p>
+    <div class="badges">
+      <span class="badge">Google Slides™ · Docs™</span>
+      <span class="badge">C · C++ · Python · JavaScript</span>
+      <span class="badge" data-i18n="badge.pseudo">Pseudocode formatting</span>
+      <span class="badge" data-i18n="badge.free">Free</span>
+    </div>
+    <a class="cta" href="https://workspace.google.com/marketplace/app/syntax_palette/135162037568" data-i18n="cta.install">Install from Google Workspace Marketplace™</a>
+    <p class="cta-note" data-i18n="cta.note">Free · Works with Google Slides™ and Google Docs™.</p>
+  </div>
+
+  <section id="features">
+    <h2 data-i18n="features.h">Features</h2>
+    <p class="sub" data-i18n="features.sub">Works on code already in the document, and on code you paste in.</p>
+    <div class="grid">
+      <div class="card">
+        <h3 data-i18n="f1.h">Apply to existing code</h3>
+        <p data-i18n="f1.p">Select code already typed into the document and the formatting is applied in place. Useful for cleaning up lecture notes or assignments you have already written.</p>
+      </div>
+      <div class="card">
+        <h3 data-i18n="f2.h">Insert new code</h3>
+        <p data-i18n="f2.p">Paste code into the sidebar and it is highlighted and inserted at the cursor. You can add a background block behind the code at the same time.</p>
+      </div>
+      <div class="card">
+        <h3 data-i18n="f3.h">Visual Studio Code themes</h3>
+        <p data-i18n="f3.p">Uses the Light+ and Dark+ colours from Visual Studio Code, down to giving control-flow keywords a different colour from declaration keywords.</p>
+      </div>
+      <div class="card">
+        <h3 data-i18n="f4.h">Automatic language detection</h3>
+        <p data-i18n="f4.p">If you do not pick a language, the add-on infers it from the code. Strings, comments, numbers, function names and types are each distinguished.</p>
+      </div>
+    </div>
+
+    <div class="demo" style="margin-top:22px">
+      <div class="demo-head">
+        <span class="dot" style="background:#ff5f57"></span>
+        <span class="dot" style="background:#febc2e"></span>
+        <span class="dot" style="background:#28c840"></span>
+        <span class="demo-title">Python · Dark+</span>
+      </div>
+<pre class="mono"><span class="k">def</span> <span class="f">solve</span>(nums):
+    total = <span class="n">0</span>              <span class="m"># running sum</span>
+    <span class="c">for</span> i, v <span class="c">in</span> <span class="f">enumerate</span>(nums):
+        <span class="c">if</span> v % <span class="n">2</span> == <span class="n">0</span>:
+            total += v
+    <span class="c">return</span> total</pre>
+    </div>
+  </section>
+
+  <section id="pseudo">
+    <h2 data-i18n="ps.h">Pseudocode formatting</h2>
+    <p class="sub" data-i18n="ps.sub">In pseudocode, keywords and variables are distinguished by typeface rather than colour.</p>
+
+    <div class="demo">
+      <div class="demo-head">
+        <span class="dot" style="background:#ff5f57"></span>
+        <span class="dot" style="background:#febc2e"></span>
+        <span class="dot" style="background:#28c840"></span>
+        <span class="demo-title" data-i18n="ps.demotitle">Pseudocode · Light+</span>
+      </div>
+<pre class="pseudo">maxScore(<span class="i">x</span>[], <span class="i">n</span>):
+    <span class="i">best</span> ← <span class="i">x</span>[1]
+    <span class="b">for</span> <span class="i">i</span> ← 2 <span class="b">to</span> <span class="i">n</span>
+        <span class="b">if</span> <span class="i">x</span>[<span class="i">i</span>] &gt; <span class="i">best</span> <span class="b">then</span> update the maximum
+    <span class="b">return</span> <span class="i">best</span></pre>
+    </div>
+
+    <table>
+      <tr><th data-i18n="ps.t.el">Element</th><th data-i18n="ps.t.st">Style</th></tr>
+      <tr><td data-i18n="ps.r1a">Variable and array names</td><td data-i18n="ps.r1b"><span class="i" style="font-family:'Courier New',ui-monospace,monospace">Italic</span></td></tr>
+      <tr><td data-i18n="ps.r2a">Keywords</td><td data-i18n="ps.r2b"><strong>Upright and bold</strong></td></tr>
+      <tr><td data-i18n="ps.r3a">Numbers and procedure names</td><td data-i18n="ps.r3b">Upright</td></tr>
+      <tr><td data-i18n="ps.r4a">CJK text</td><td data-i18n="ps.r4b">Upright — Korean, Chinese and Japanese have no italic forms, so they are left alone</td></tr>
+      <tr><td data-i18n="ps.r5a">Body font</td><td data-i18n="ps.r5b">Chosen in the sidebar (Courier New by default)</td></tr>
+    </table>
+
+    <p style="color:var(--muted); font-size:15px; margin-top:22px" data-i18n="ps.note">
+      The keyword list is editable in the sidebar.
+      Your edited list is saved to your account and kept the next time you open a document, and matching
+      is case-insensitive. When code is inserted, <code>&lt;-</code> <code>&lt;=</code> <code>&gt;=</code>
+      <code>!=</code> are converted to <code>←</code> <code>≤</code> <code>≥</code> <code>≠</code>.
+    </p>
+  </section>
+
+  <section id="privacy-summary">
+    <h2 data-i18n="dp.h">How your data is handled</h2>
+    <p class="sub" data-i18n="dp.sub">Nothing is collected.</p>
+    <table>
+      <tr><td data-i18n="dp.r1a">Scope of access</td><td data-i18n="dp.r1b">The single document you currently have open. No other file in your Google Drive™ can be reached</td></tr>
+      <tr><td data-i18n="dp.r2a">Transmission</td><td data-i18n="dp.r2b">None. All processing runs inside your own Google account</td></tr>
+      <tr><td data-i18n="dp.r3a">Storage</td><td data-i18n="dp.r3b">Document content is never stored. Only your own display settings, such as the keyword list, are kept</td></tr>
+      <tr><td data-i18n="dp.r4a">Analytics and tracking</td><td data-i18n="dp.r4b">None. No usage data is collected</td></tr>
+    </table>
+    <p style="margin-top:18px"><a href="privacy" data-i18n="dp.link">Read the full privacy policy →</a></p>
+  </section>
+
+  <section id="install">
+    <h2 data-i18n="in.h">Install</h2>
+    <p class="sub" data-i18n="in.sub">Install once and the add-on appears under the Extensions menu in every document.</p>
+    <table>
+      <tr><td data-i18n="in.r0a">Marketplace</td><td><a href="https://workspace.google.com/marketplace/app/syntax_palette/135162037568" data-i18n="in.r0b">Syntax Palette on Google Workspace Marketplace™</a></td></tr>
+      <tr><td data-i18n="in.r1a">Supported hosts</td><td>Google Slides™, Google Docs™</td></tr>
+      <tr><td data-i18n="in.r2a">Price</td><td data-i18n="in.r2b">Free</td></tr>
+      <tr><td data-i18n="in.r3a">Permissions required</td><td data-i18n="in.r3b">Access to the current document; display of a sidebar</td></tr>
+    </table>
+  </section>
+
+  <section id="developer">
+    <h2 data-i18n="dv.h">Developer</h2>
+    <p class="sub" data-i18n="dv.sub">Questions and bug reports are welcome.</p>
+    <div class="dev">
+      <img class="mark" src="avatar.png" alt="Developer avatar">
+      <div>
+        <p style="margin:0 0 2px;font-size:16.5px;font-weight:600;color:var(--text)" data-i18n="dv.name">Developed by Sani</p>
+        <p style="color:var(--muted); font-size:14.5px; margin:0" data-i18n="dv.p">
+          This add-on came out of the friction of preparing computer science course material.<br>
+          It covers C, C++, Python, JavaScript and pseudocode.
+        </p>
+        <dl>
+          <dt data-i18n="dv.contact">Contact</dt><dd><a href="mailto:dinosinfolee@gmail.com">dinosinfolee@gmail.com</a></dd>
+          <dt data-i18n="dv.site">Website</dt><dd><a href="https://dinosinfolee.github.io/policy/syntax-palette/">dinosinfolee.github.io/policy/syntax-palette</a></dd>
+          <dt data-i18n="dv.product">Product</dt><dd>Syntax Palette</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="links">
+      <a href="privacy" data-i18n="ft.privacy">Privacy Policy</a>
+      <a href="terms" data-i18n="ft.terms">Terms of Service</a>
+      <a href="mailto:dinosinfolee@gmail.com" data-i18n="ft.support">Support</a>
+    </div>
+    <p><strong>Syntax Palette</strong> — © 2026 Sani. All rights reserved.</p>
+    <p data-i18n="ft.tm">Google Docs, Google Slides, Google Drive, Google Workspace and Google Workspace Marketplace
+       are trademarks of Google LLC. Visual Studio Code is a trademark of Microsoft Corporation.
+       This add-on is not endorsed by or affiliated with Google LLC.</p>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var KO = {
+    'nav.features': '기능',
+    'nav.pseudo': '의사코드',
+    'nav.developer': '개발자',
+    'nav.privacy': '개인정보',
+
+    'hero.tagline': 'Syntax Palette는 Google Slides™와 Google Docs™에서, 현재 열어 둔 파일 안의 소스 코드와 의사코드에 구문 강조 서식을 적용하는 부가기능입니다.',
+    'hero.lead': '이 부가기능을 사용하면 Google Slides™ 프레젠테이션이나 Google Docs™ 문서에서 코드를 선택해 예약어·문자열·주석에 색을 적용할 수 있습니다. C·C++·Python·JavaScript와 의사코드를 지원하며, 의사코드에서는 변수가 이탤릭으로, 예약어가 굵은 정자체로 바뀝니다. 무료입니다.',
+
+    'badge.pseudo': '의사코드 표현',
+    'badge.free': '무료',
+    'cta.install': 'Google Workspace Marketplace™ 에서 설치',
+    'cta.note': '무료 · Google Slides™ · Google Docs™ 지원.',
+
+    'features.h': '주요 기능',
+    'features.sub': '문서에 이미 있는 코드에도, 새로 넣는 코드에도 적용됩니다.',
+    'f1.h': '기존 코드에 적용',
+    'f1.p': '문서에 입력해 둔 코드를 드래그해 선택하면 그 자리에서 서식이 적용됩니다. 이미 작성한 강의 자료나 과제물을 정리할 때 사용합니다.',
+    'f2.h': '신규 코드 삽입',
+    'f2.p': '사이드바에 코드를 붙여넣으면 서식을 적용해 커서 위치에 삽입합니다. 코드 블록 배경을 함께 넣을 수 있습니다.',
+    'f3.h': 'Visual Studio Code 테마',
+    'f3.p': 'Visual Studio Code의 Light+ / Dark+ 색상을 그대로 사용합니다. 제어문과 선언 키워드를 다른 색으로 구분하는 방식까지 동일합니다.',
+    'f4.h': '언어 자동 감지',
+    'f4.p': '언어를 지정하지 않으면 코드 내용을 보고 판단합니다. 문자열, 주석, 숫자, 함수 이름, 자료형이 각각 구분됩니다.',
+
+    'ps.h': '의사코드 표현',
+    'ps.sub': '의사코드에서 예약어, 변수 등은 서체로 구분됩니다.',
+    'ps.demotitle': '의사코드 · Light+',
+    'ps.t.el': '요소',
+    'ps.t.st': '표기',
+    'ps.r1a': '변수 · 배열 이름',
+    'ps.r1b': '<span class="i" style="font-family:\'Courier New\',ui-monospace,monospace">이탤릭체</span>',
+    'ps.r2a': '예약어',
+    'ps.r2b': '<strong>정자체 + 굵게</strong>',
+    'ps.r3a': '숫자 · 프로시저 이름',
+    'ps.r3b': '정자체',
+    'ps.r4a': '한중일 문자',
+    'ps.r4b': '정자체 — 한글·한자·가나는 이탤릭 자형이 없어 기울이지 않습니다',
+    'ps.r5a': '본문 글꼴',
+    'ps.r5b': '사이드바에서 선택 (기본 Courier New)',
+    'ps.note': '예약어 목록은 사이드바에서 직접 수정할 수 있습니다. 수정한 목록은 계정에 저장되어 다음에 문서를 열 때도 유지되며, 대소문자는 구분하지 않습니다. 코드를 삽입할 때 <code>&lt;-</code> <code>&lt;=</code> <code>&gt;=</code> <code>!=</code> 는 <code>←</code> <code>≤</code> <code>≥</code> <code>≠</code> 로 자동 변환됩니다.',
+
+    'dp.h': '데이터 처리 방식',
+    'dp.sub': '수집하는 정보가 없습니다.',
+    'dp.r1a': '접근 범위',
+    'dp.r1b': '현재 열려 있는 문서 하나. Google Drive™의 다른 파일에는 접근할 수 없습니다',
+    'dp.r2a': '외부 전송',
+    'dp.r2b': '없음. 모든 처리는 사용자의 Google 계정 안에서 실행됩니다',
+    'dp.r3a': '저장',
+    'dp.r3b': '문서 내용을 저장하지 않습니다. 사용자가 지정한 표시 설정만 계정에 남습니다',
+    'dp.r4a': '분석 · 추적',
+    'dp.r4b': '없음. 사용 기록을 수집하지 않습니다',
+    'dp.link': '개인정보처리방침 전문 보기 →',
+
+    'in.h': '설치',
+    'in.sub': '한 번 설치하면 모든 문서의 확장 프로그램 메뉴에 나타납니다.',
+    'in.r0a': '마켓플레이스',
+    'in.r0b': 'Google Workspace Marketplace™ 의 Syntax Palette',
+    'in.r1a': '지원 환경',
+    'in.r2a': '요금',
+    'in.r2b': '무료',
+    'in.r3a': '필요 권한',
+    'in.r3b': '현재 문서 접근, 사이드바 표시',
+
+    'dv.h': '개발자',
+    'dv.sub': '문의와 버그 신고를 받고 있습니다.',
+    'dv.p': '컴퓨터 과학 수업 자료를 만들며 겪은 불편에서 이 부가기능을 개발했습니다.<br>C, C++, Python, JavaScript와 의사코드를 다룹니다.',
+    'dv.name': '개발자 · Sani',
+    'dv.contact': '문의',
+    'dv.site': '웹사이트',
+    'dv.product': '제품',
+
+    'ft.privacy': '개인정보처리방침',
+    'ft.terms': '이용약관',
+    'ft.support': '지원 문의',
+    'ft.tm': 'Google Docs™, Google Slides™, Google Drive™, Google Workspace™, Google Workspace Marketplace™는 Google LLC의 상표입니다. Visual Studio Code는 Microsoft Corporation의 상표입니다. 이 부가기능은 Google LLC가 보증하거나 후원하지 않습니다.'
+  };
+
+  // 앱 이름은 번역하지 않는다. OAuth 브랜딩에 등록된 이름과 문자 단위로 같아야 한다.
+  var TITLE = { en: 'Syntax Palette', ko: 'Syntax Palette' };
+
+  var nodes = document.querySelectorAll('[data-i18n]');
+  var EN = {};
+  Array.prototype.forEach.call(nodes, function (el) {
+    EN[el.getAttribute('data-i18n')] = el.innerHTML;
+  });
+
+  function apply(lang) {
+    var dict = (lang === 'ko') ? KO : EN;
+    Array.prototype.forEach.call(nodes, function (el) {
+      var k = el.getAttribute('data-i18n');
+      if (dict[k] !== undefined) el.innerHTML = dict[k];
+      else if (EN[k] !== undefined) el.innerHTML = EN[k];
+    });
+    document.documentElement.lang = lang;
+    document.title = TITLE[lang] || TITLE.en;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-lang]'), function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === lang));
+    });
+    try { localStorage.setItem('sp-lang', lang); } catch (e) {}
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-lang]'), function (b) {
+    b.addEventListener('click', function () { apply(b.getAttribute('data-lang')); });
+  });
+
+  var saved = null;
+  try { saved = localStorage.getItem('sp-lang'); } catch (e) {}
+  if (saved === 'ko') apply('ko');
+})();
+</script>
+
+</body>
+</html>
